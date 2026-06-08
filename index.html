@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Velvet & Cream - 케이크 예약하기</title>
+    <!-- Tailwind CSS with Forms and Container Queries plugins -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Be+Vietnam+Pro:wght@400;500;600&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#a93152",
+                        "on-primary": "#ffffff",
+                        "primary-container": "#c94a6a",
+                        "on-primary-container": "#130003",
+                        "inverse-primary": "#ffb2bf",
+                        "background": "#fff8f6",
+                        "on-background": "#311309",
+                        "surface": "#fff8f6",
+                        "surface-bright": "#fff8f6",
+                        "surface-dim": "#ffd0c2",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-low": "#fff1ed",
+                        "surface-container": "#ffe9e3",
+                        "surface-container-high": "#ffe2da",
+                        "surface-container-highest": "#ffdbd0",
+                        "on-surface": "#311309",
+                        "on-surface-variant": "#574144",
+                        "inverse-surface": "#4a271c",
+                        "inverse-on-surface": "#ffede8",
+                        "outline": "#8a7174",
+                        "outline-variant": "#ddbfc3",
+                        "secondary": "#795462",
+                        "secondary-container": "#fecddd",
+                        "on-secondary-container": "#7a5562",
+                        "on-secondary": "#ffffff",
+                        "tertiary": "#695e39",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-container": "#b9ab80",
+                        "on-tertiary-container": "#493f1d",
+                        "brand-brown": "#5a3428"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                    boxShadow: {
+                        "soft": "0px 10px 30px rgba(90, 52, 40, 0.05)",
+                        "lift": "0px 15px 35px rgba(90, 52, 40, 0.08)"
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { 
+            font-family: 'Be Vietnam Pro', 'Noto Sans KR', sans-serif; 
+            background-color: #fff8f6;
+            color: #311309;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Smooth Custom Micro-Transitions */
+        .interactive-card {
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .interactive-card:hover {
+            transform: translateY(-4px);
+        }
+        
+        /* Glow style on click */
+        .selected-ring {
+            box-shadow: 0 0 0 2px #a93152;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background antialiased pb-32">
+
+<!-- Top App Bar -->
+<header class="fixed top-0 left-0 w-full z-40 flex justify-between items-center px-6 h-16 bg-background/90 backdrop-blur-md border-b border-surface-container/30">
+    <button id="backBtn" class="text-primary hover:opacity-80 transition-all p-1 flex items-center justify-center rounded-full hover:bg-surface-container-low" title="이전으로">
+        <span class="material-symbols-outlined text-[28px]" style="font-variation-settings: 'FILL' 0;">arrow_back</span>
+    </button>
+    <h1 class="text-[20px] font-bold font-title-md text-primary tracking-tight">케이크 예약하기</h1>
+    <button id="giftBtn" class="text-primary hover:opacity-80 transition-all p-1 flex items-center justify-center rounded-full hover:bg-surface-container-low relative" title="선물하기">
+        <span class="material-symbols-outlined text-[28px]" style="font-variation-settings: 'FILL' 0;">card_giftcard</span>
+        <span class="absolute top-1 right-1 w-2 h-2 bg-primary rounded-full ring-2 ring-background"></span>
+    </button>
+</header>
+
+<main class="pt-20 px-4 max-w-[640px] mx-auto space-y-6">
+
+    <!-- Hero Section -->
+    <section class="w-full">
+        <div class="relative rounded-[24px] overflow-hidden bg-gradient-to-br from-surface-container-low via-surface-container to-surface-container-highest p-6 flex flex-col md:flex-row items-center gap-6 shadow-soft hover:shadow-lift transition-shadow duration-300">
+            <div class="z-10 flex-1 space-y-2">
+                <span class="inline-flex items-center gap-1 bg-surface-container-lowest text-primary text-xs font-semibold px-3 py-1.5 rounded-full shadow-sm">
+                    소중한 순간을 더 특별하게 ❤️
+                </span>
+                <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight text-on-background leading-normal">
+                    기념일 케이크<br/>예약 주문
+                </h2>
+                <p class="text-sm text-on-surface-variant font-medium leading-relaxed">
+                    정성 가득한 시그니처 케이크와<br/>당신만의 메시지로 행복한 날을 완성하세요.
+                </p>
+            </div>
+            
+            <div class="relative w-full md:w-44 aspect-square rounded-[20px] overflow-hidden shadow-md">
+                <img id="heroImage" alt="Hero Cake Image" class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRov6viQRj1n9TptavZfRBABfkCaT1ge-zfsmn_X23MFLfBLOiFDZYP6aKiSbQhMSCP2ON8VBBP_ikPgeQ7KCyjeRNVf9O-Aexu8alslCG4AJMW9zbzuuHI9lFOIYkZFVGTizo-FaHgSztDwWsuXdLO5sJcpICI4fWhJB3ZZn8s8o8gadaEwSsAWh-TlvYCpA-Be3uQ--4n3gJKsZiRauSWZrn7dHnt2ZmFFfzvrwwuGm-L_AlVmlMTiVki0deEAoY_R9BV3hWFA"/>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Popular Cakes Selection -->
+    <section class="space-y-3">
+        <div class="flex justify-between items-center px-1">
+            <h3 class="text-lg font-bold text-brand-brown flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-primary text-xl">star</span>인기 시그니처 케이크
+            </h3>
+            <span class="text-xs font-medium text-primary">케이크 카드를 선택하세요</span>
+        </div>
+        
+        <!-- Horizontal Scroll List -->
+        <div id="cakeList" class="flex gap-4 overflow-x-auto pb-4 pt-1 px-1 hide-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0">
+            <!-- Card 1: Strawberry (Initial Selected) -->
+            <div data-cake-id="strawberry" class="cake-card min-w-[200px] flex-shrink-0 bg-surface-container-lowest rounded-[24px] p-3.5 shadow-soft hover:shadow-lift border-2 border-primary interactive-card cursor-pointer relative selected-ring">
+                <div class="relative rounded-[16px] overflow-hidden aspect-square mb-3">
+                    <span class="absolute top-2.5 left-2.5 bg-primary-container text-on-primary text-[10px] font-bold px-2.5 py-1 rounded-full shadow-sm tracking-wide z-10 uppercase">BEST</span>
+                    <img alt="딸기 생크림 케이크" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRov6viQRj1n9TptavZfRBABfkCaT1ge-zfsmn_X23MFLfBLOiFDZYP6aKiSbQhMSCP2ON8VBBP_ikPgeQ7KCyjeRNVf9O-Aexu8alslCG4AJMW9zbzuuHI9lFOIYkZFVGTizo-FaHgSztDwWsuXdLO5sJcpICI4fWhJB3ZZn8s8o8gadaEwSsAWh-TlvYCpA-Be3uQ--4n3gJKsZiRauSWZrn7dHnt2ZmFFfzvrwwuGm-L_AlVmlMTiVki0deEAoY_R9BV3hWFA"/>
+                </div>
+                <h4 class="text-[15px] font-bold text-brand-brown truncate">딸기 생크림 케이크</h4>
+                <div class="flex justify-between items-center mt-1.5">
+                    <span class="text-[17px] font-extrabold text-primary">34,000원</span>
+                    <button class="wishBtn text-outline-variant hover:text-primary p-1 bg-surface rounded-full shadow-sm transition-colors" onclick="event.stopPropagation(); toggleWishlist(this)">
+                        <span class="material-symbols-outlined text-[18px]">favorite_border</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Card 2: Chocolate -->
+            <div data-cake-id="chocolate" class="cake-card min-w-[200px] flex-shrink-0 bg-surface-container-lowest rounded-[24px] p-3.5 shadow-soft hover:shadow-lift border-2 border-transparent interactive-card cursor-pointer relative">
+                <div class="relative rounded-[16px] overflow-hidden aspect-square mb-3">
+                    <span class="absolute top-2.5 left-2.5 bg-[#fecddd] text-primary text-[10px] font-bold px-2.5 py-1 rounded-full shadow-sm tracking-wide z-10 uppercase">NEW</span>
+                    <img alt="초콜릿 가나슈 케이크" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCvtQN2W50t9-vMqYty7Rmsr17UYFz6DZuzCYLIZFedYNE7kv6FbS6LfICxt4_hmMl8QsGx332gF3jH4vs3NYwbawT9JVD-X7bvxgep8riaO39enbeP4pIC54cjdcY7GGXJ8dVu_-LX3m7fqNZk5BU6RV8ErXsjG-YMVNnG2BsOVWklKqDyJoZfPq7bvzLumsN3R5g4N2_hbUScaYTRxzZ37OF3qAFHktRIpKT8qWeAfULTB8q4QO51YUz3S-hMGmG6xmHg4IqPnQ"/>
+                </div>
+                <h4 class="text-[15px] font-bold text-brand-brown truncate">초콜릿 가나슈 케이크</h4>
+                <div class="flex justify-between items-center mt-1.5">
+                    <span class="text-[17px] font-extrabold text-primary">36,000원</span>
+                    <button class="wishBtn text-outline-variant hover:text-primary p-1 bg-surface rounded-full shadow-sm transition-colors" onclick="event.stopPropagation(); toggleWishlist(this)">
+                        <span class="material-symbols-outlined text-[18px]">favorite_border</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Card 3: Earl Grey (Added Option for richer content) -->
+            <div data-cake-id="earlgrey" class="cake-card min-w-[200px] flex-shrink-0 bg-surface-container-lowest rounded-[24px] p-3.5 shadow-soft hover:shadow-lift border-2 border-transparent interactive-card cursor-pointer relative">
+                <div class="relative rounded-[16px] overflow-hidden aspect-square mb-3">
+                    <span class="absolute top-2.5 left-2.5 bg-[#f2e2b3] text-brand-brown text-[10px] font-bold px-2.5 py-1 rounded-full shadow-sm tracking-wide z-10 uppercase">SIGNATURE</span>
+                    <img alt="얼그레이 자몽 케이크" class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&q=80&w=300"/>
+                </div>
+                <h4 class="text-[15px] font-bold text-brand-brown truncate">얼그레이 자몽 케이크</h4>
+                <div class="flex justify-between items-center mt-1.5">
+                    <span class="text-[17px] font-extrabold text-primary">35,000원</span>
+                    <button class="wishBtn text-outline-variant hover:text-primary p-1 bg-surface rounded-full shadow-sm transition-colors" onclick="event.stopPropagation(); toggleWishlist(this)">
+                        <span class="material-symbols-outlined text-[18px]">favorite_border</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reservation Date & Time -->
+    <section class="bg-surface-container-lowest rounded-[24px] p-5 shadow-soft space-y-4 border border-surface-container/50">
+        <h3 class="text-lg font-bold text-brand-brown flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary text-xl">calendar_month</span> 예약 날짜 및 시간
+        </h3>
+        
+        <!-- Date Switcher -->
+        <div>
+            <p class="text-xs font-semibold text-on-surface-variant mb-2.5">픽업 날짜 선택</p>
+            <div class="grid grid-cols-4 gap-2">
+                <button data-date="5.24" class="date-option-btn py-3 bg-primary-container text-on-primary rounded-[16px] flex flex-col items-center justify-center shadow-md border-2 border-transparent transition-all transform active:scale-95">
+                    <span id="dateText1" class="text-base font-bold">5.24</span>
+                    <span class="text-[10px] opacity-90 font-medium">오늘</span>
+                </button>
+                <button data-date="5.25" class="date-option-btn py-3 bg-surface hover:bg-surface-container-lowest text-brand-brown border border-outline-variant rounded-[16px] flex flex-col items-center justify-center transition-all transform active:scale-95">
+                    <span id="dateText2" class="text-base font-bold">5.25</span>
+                    <span class="text-[10px] text-on-surface-variant font-medium">내일</span>
+                </button>
+                <button data-date="5.26" class="date-option-btn py-3 bg-surface hover:bg-surface-container-lowest text-brand-brown border border-outline-variant rounded-[16px] flex flex-col items-center justify-center transition-all transform active:scale-95">
+                    <span id="dateText3" class="text-base font-bold">5.26</span>
+                    <span class="text-[10px] text-on-surface-variant font-medium">모레</span>
+                </button>
+                <button id="customDateBtn" class="py-3 bg-surface hover:bg-surface-container-lowest text-brand-brown border border-outline-variant rounded-[16px] flex flex-col items-center justify-center transition-all transform active:scale-95">
+                    <span class="material-symbols-outlined text-primary text-xl">calendar_today</span>
+                    <span id="customDateLabel" class="text-[10px] text-primary font-bold mt-1">다른 날짜</span>
+                </button>
+            </div>
+            <!-- Hidden Date Input for picker -->
+            <input type="date" id="hiddenDatePicker" class="hidden" min="2026-06-08"/>
+        </div>
+
+        <!-- Time Picker -->
+        <div>
+            <p class="text-xs font-semibold text-on-surface-variant mb-2.5 flex items-center gap-1">
+                <span class="material-symbols-outlined text-xs">schedule</span> 픽업 시간 선택
+            </p>
+            <div class="flex flex-wrap gap-2" id="timeSelection">
+                <button data-time="오전 11:00" class="time-option-btn px-4 py-2.5 bg-primary-container text-on-primary rounded-full text-xs font-semibold shadow-sm border border-transparent transition-all">오전 11:00</button>
+                <button data-time="오후 12:00" class="time-option-btn px-4 py-2.5 bg-surface hover:bg-surface-container-lowest text-brand-brown border border-outline-variant rounded-full text-xs font-semibold transition-all">오후 12:00</button>
+                <button data-time="오후 02:00" class="time-option-btn px-4 py-2.5 bg-surface hover:bg-surface-container-lowest text-brand-brown border border-outline-variant rounded-full text-xs font-semibold transition-all">오후 02:00</button>
+                <button data-time="오후 04:00" class="time-option-btn px-4 py-2.5 bg-surface hover:bg-surface-container-lowest text-brand-brown border border-outline-variant rounded-full text-xs font-semibold transition-all">오후 04:00</button>
+                <button data-time="오후 06:00" class="time-option-btn px-4 py-2.5 bg-surface hover:bg-surface-container-lowest text-brand-brown border border-outline-variant rounded-full text-xs font-semibold transition-all">오후 06:00</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cake Custom Options -->
+    <section class="bg-surface-container-lowest rounded-[24px] p-5 shadow-soft space-y-4 border border-surface-container/50">
+        <h3 class="text-lg font-bold text-brand-brown flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary text-xl">cake</span> 케이크 옵션 선택
+        </h3>
+
+        <!-- Sizes Selection -->
+        <div>
+            <p class="text-xs font-semibold text-on-surface-variant mb-2.5">사이즈 선택</p>
+            <div class="grid grid-cols-2 gap-3" id="sizeSelection">
+                <button data-size-index="0" data-size-name="1호 (15cm)" data-size-add="0" class="size-option-btn py-2.5 bg-surface-container-low text-primary border-2 border-primary-container rounded-[16px] text-sm font-bold flex flex-col items-center justify-center shadow-sm transition-all">
+                    <span>1호 (15cm)</span>
+                    <span class="text-[10px] text-primary/80 font-normal">인기 / 2~3인용 (+0원)</span>
+                </button>
+                <button data-size-index="1" data-size-name="2호 (18cm)" data-size-add="6000" class="size-option-btn py-2.5 bg-surface hover:bg-surface-container-lowest text-brand-brown border border-outline-variant rounded-[16px] text-sm font-bold flex flex-col items-center justify-center transition-all">
+                    <span>2호 (18cm)</span>
+                    <span class="text-[10px] text-on-surface-variant/80 font-normal">단체 / 4~6인용 (+6,000원)</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Flavor Selection -->
+        <div>
+            <p class="text-xs font-semibold text-on-surface-variant mb-2.5">시트 / 크림 맛</p>
+            <div class="grid grid-cols-2 gap-3" id="flavorSelection">
+                <button data-flavor="생크림" class="flavor-option-btn py-2.5 bg-surface-container-low text-primary border-2 border-primary-container rounded-[16px] text-sm font-bold transition-all">
+                    달콤 생크림
+                </button>
+                <button data-flavor="초콜릿" class="flavor-option-btn py-2.5 bg-surface hover:bg-surface-container-lowest text-brand-brown border border-outline-variant rounded-[16px] text-sm font-bold transition-all">
+                    진한 가나슈 초코
+                </button>
+            </div>
+        </div>
+
+        <!-- Additional Options -->
+        <div>
+            <p class="text-xs font-semibold text-on-surface-variant mb-2.5">추가 아이템 옵션</p>
+            <div class="bg-surface-container-low/40 p-3 rounded-[16px] space-y-3">
+                <label class="flex items-center justify-between p-1 cursor-pointer group selection-none">
+                    <div class="flex items-center gap-2.5">
+                        <input id="chkOptionCandle" type="checkbox" checked class="w-[18px] h-[18px] rounded text-primary focus:ring-primary border-outline-variant focus:ring-opacity-40" />
+                        <span class="text-sm font-semibold text-brand-brown group-hover:text-primary transition-colors">예쁜 축하 초 추가</span>
+                    </div>
+                    <span class="text-xs font-bold text-primary">+1,000원</span>
+                </label>
+                <div class="h-[1px] bg-outline-variant/30"></div>
+                <label class="flex items-center justify-between p-1 cursor-pointer group selection-none">
+                    <div class="flex items-center gap-2.5">
+                        <input id="chkOptionCard" type="checkbox" checked class="w-[18px] h-[18px] rounded text-primary focus:ring-primary border-outline-variant focus:ring-opacity-40" />
+                        <span class="text-sm font-semibold text-brand-brown group-hover:text-primary transition-colors">감동 손글씨 카드 추가</span>
+                    </div>
+                    <span class="text-xs font-bold text-primary">+1,000원</span>
+                </label>
+            </div>
+        </div>
+    </section>
+
+    <!-- Message Section -->
+    <section class="bg-surface-container-lowest rounded-[24px] p-5 shadow-soft space-y-3 border border-surface-container/50">
+        <h3 class="text-lg font-bold text-brand-brown flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary text-xl">favorite</span> 
+                <span>메시지 및 문구 입력</span>
+                <span class="text-xs font-normal text-on-surface-variant">(선택)</span>
+            </div>
+            <span id="charCountLabel" class="text-xs font-semibold text-primary">0 / 30자</span>
+        </h3>
+        
+        <p class="text-xs text-on-surface-variant leading-relaxed">케이크 시트 위의 레터링 또는 토퍼 문구(한글/영문 30자 이내)를 기입해 주시면 예쁘게 작성해 드립니다.</p>
+        
+        <div class="relative">
+            <textarea id="messageInput" maxlength="30" class="w-full bg-surface border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary/35 rounded-[18px] p-3.5 text-sm text-brand-brown placeholder-on-surface-variant/50 focus:outline-none resize-none h-24 transition-all" placeholder="기념일을 더 뜻깊게 만들어 줄 메시지 문구를 입력해 보세요. 예) 축 기념일, 사랑해!"></textarea>
+            <div class="absolute bottom-3 right-3 text-[10px] text-on-surface-variant/70 font-semibold bg-white/80 px-2 py-0.5 rounded-full pointer-events-none">레터링 무상 지원</div>
+        </div>
+    </section>
+
+    <!-- Gift Option Selection -->
+    <section class="bg-surface-container-lowest rounded-[24px] p-5 shadow-soft space-y-4 border border-surface-container/50">
+        <h3 class="text-lg font-bold text-brand-brown flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary text-xl">redeem</span> 포장 및 선물 옵션
+        </h3>
+        
+        <div class="grid grid-cols-3 gap-2.5" id="packagingSelection">
+            <button data-pkg-id="free" data-pkg-add="0" class="pkg-option-btn flex flex-col items-center justify-center p-3.5 border-2 border-primary-container bg-surface-container-low rounded-[16px] text-center shadow-sm transition-all transform active:scale-95">
+                <span class="material-symbols-outlined text-primary mb-1 text-2xl" style="font-variation-settings: 'FILL' 1;">shopping_bag</span>
+                <span class="text-xs font-bold text-brand-brown">기본 포장</span>
+                <span class="text-[10px] text-primary/80 font-medium">무료</span>
+            </button>
+            
+            <button data-pkg-id="premium" data-pkg-add="2000" class="pkg-option-btn flex flex-col items-center justify-center p-3.5 border border-outline-variant bg-surface rounded-[16px] text-center transition-all transform active:scale-95 text-on-surface-variant/80">
+                <span class="material-symbols-outlined text-outline mb-1 text-2xl" style="font-variation-settings: 'FILL' 0;">featured_seasonal_and_gifts</span>
+                <span class="text-xs font-bold text-brand-brown">선물 포장</span>
+                <span class="text-[10px] text-on-surface-variant/60 font-medium">+2,000원</span>
+            </button>
+            
+            <button data-pkg-id="flower" data-pkg-add="10000" class="pkg-option-btn flex flex-col items-center justify-center p-3.5 border border-outline-variant bg-surface rounded-[16px] text-center transition-all transform active:scale-95 text-on-surface-variant/80">
+                <span class="material-symbols-outlined text-outline mb-1 text-2xl" style="font-variation-settings: 'FILL' 0;">local_florist</span>
+                <span class="text-xs font-bold text-brand-brown">꽃다발 동봉</span>
+                <span class="text-[10px] text-on-surface-variant/60 font-medium">+10,000원</span>
+            </button>
+        </div>
+    </section>
+
+</main>
+
+<!-- Bottom Nav Bar / Sticky Footer -->
+<footer class="fixed bottom-0 left-0 w-full z-40 bg-surface/90 backdrop-blur-lg border-t border-surface-container/40 shadow-soft px-4 py-3 pb-safe flex gap-3 items-center max-w-[640px] mx-auto left-1/2 -translate-x-1/2 rounded-t-[20px]">
+    <!-- Heart Link -->
+    <button id="footerHeartBtn" class="text-secondary p-3 flex items-center justify-center border border-outline-variant hover:border-primary rounded-[18px] min-w-[52px] h-[52px] bg-white hover:bg-surface-container-low transition-all active:scale-90 shadow-sm" title="찜하기">
+        <span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 0;">favorite_border</span>
+    </button>
+    
+    <!-- Primary CTA Reservation Button -->
+    <button id="reserveBtn" class="flex-1 bg-primary text-on-primary hover:bg-primary-container rounded-full flex items-center justify-between px-6 py-2 h-[52px] shadow-md hover:shadow-lg transition-all active:scale-[0.98]">
+        <div class="flex flex-col items-start leading-tight">
+            <span id="footerSummaryLabel" class="text-[10px] font-semibold text-white/80 select-none">5월 24일 (토) 오전 11:00 픽업 예정</span>
+            <span id="footerPriceLabel" class="text-base font-extrabold tracking-wide">딸기 생크림 케이크 예약 36,000원</span>
+        </div>
+        <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+    </button>
+</footer>
+
+<!-- High-fidelity Completion Receipt Modal Inside System -->
+<div id="receiptModal" class="fixed inset-0 z-50 overflow-y-auto hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+        <!-- Blur Backdrop -->
+        <div class="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity" aria-hidden="true" onclick="closeReceiptModal()"></div>
+        
+        <!-- Element to trick browser to center modal contents -->
+        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+        
+        <!-- Receipt Card Container -->
+        <div class="inline-block align-bottom bg-[#fffcfb] rounded-[28px] text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-md sm:w-full border border-surface-container">
+            <!-- Receipt Header Decoration -->
+            <div class="relative bg-primary p-6 text-on-primary text-center">
+                <span class="material-symbols-outlined text-4xl mb-1" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                <h3 class="text-xl font-bold tracking-tight">예약 주문이 신청되었습니다!</h3>
+                <p class="text-xs text-white/80 mt-1">지정하신 픽업 시간에 매장을 방문해 주세요.</p>
+                <!-- Decorative wave vector simulation beneath -->
+                <div class="absolute bottom-0 left-0 right-0 h-1 flex justify-between">
+                    <!-- Repeated CSS wave dots -->
+                    <div class="w-full h-1 bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-background via-transparent to-transparent bg-[length:12px_10px]"></div>
+                </div>
+            </div>
+            
+            <!-- Receipt Main Body -->
+            <div class="p-6 space-y-4">
+                <div class="flex justify-between items-center text-xs font-semibold text-on-surface-variant">
+                    <span>주문번호: VC-20260608-A97</span>
+                    <span>방문 예정일: <span id="rsvDate" class="text-primary font-bold">5월 24일</span></span>
+                </div>
+                
+                <div class="border-t border-dashed border-outline-variant/40 pt-4 space-y-3.5">
+                    <!-- Cake Name -->
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h4 id="rsvCakeName" class="text-[17px] font-extrabold text-brand-brown">딸기 생크림 케이크</h4>
+                            <p id="rsvSizeAndFlavor" class="text-xs text-on-surface-variant font-medium mt-0.5">선택: 1호(15cm) / 달콤 생크림 맛</p>
+                        </div>
+                        <span id="rsvCakePrice" class="text-base font-bold text-brand-brown">34,000원</span>
+                    </div>
+                    
+                    <!-- Details Options list -->
+                    <div id="rsvOptionsBox" class="bg-surface-container-low/40 rounded-xl p-3 text-xs space-y-1.5 font-medium text-on-surface-variant">
+                        <div class="flex justify-between">
+                            <span>예쁜 축하 초 추가</span>
+                            <span class="text-brand-brown font-bold">+1,000원</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>감동 손글씨 카드 추가</span>
+                            <span class="text-brand-brown font-bold">+1,000원</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Packaging Option info -->
+                    <div class="flex justify-between items-center text-xs text-on-surface-variant font-medium">
+                        <span>선물 포장 및 캐리어</span>
+                        <span id="rsvPackagingPrice" class="text-brand-brown font-bold">+2,000원</span>
+                    </div>
+
+                    <!-- Lettering message -->
+                    <div id="rsvMessageRow" class="bg-[#fecddd]/15 border-l-4 border-primary p-2.5 rounded-r-lg">
+                        <span class="text-[10px] font-bold text-primary block">시트 위 무료 레터링 문구</span>
+                        <p id="rsvMessageContent" class="text-xs font-bold text-brand-brown mt-0.5">"기념 축하해 사랑해!"</p>
+                    </div>
+                </div>
+                
+                <div class="border-t border-dashed border-outline-variant/50 pt-4">
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm font-bold text-brand-brown">최종 결제 금액</span>
+                        <span id="rsvTotalAmount" class="text-2xl font-extrabold text-primary">36,000원</span>
+                    </div>
+                </div>
+
+                <!-- Pickup Guidelines -->
+                <div class="bg-surface-container-low/50 p-3.5 rounded-2xl text-[11px] leading-relaxed text-on-surface-variant">
+                    <p class="font-bold text-brand-brown mb-1 flex items-center gap-1">
+                        <span class="material-symbols-outlined text-xs text-primary font-bold">info</span> 픽업 안내 및 안전 주의사항
+                    </p>
+                    - 예약일 당일 픽업 미방문 시 신선 숙성 특성상 다음 날까지 보관되며, 이후 자동 폐기됩니다.<br/>
+                    - 취소나 시간 연장은 예약 전날 오후 6시 전까지 고객센터를 통해 100% 무상 변경 가능합니다.
+                </div>
+            </div>
+            
+            <!-- Receipt Confirm Actions -->
+            <div class="bg-surface-container-low/30 px-6 py-4 flex gap-2.5 rounded-b-[28px] border-t border-surface-container/50">
+                <button type="button" class="flex-1 bg-surface-container border border-outline-variant text-[14px] font-bold text-brand-brown py-3 rounded-full hover:bg-surface-container-high active:scale-95 transition-all text-center" onclick="closeReceiptModal()">
+                    확인 및 닫기
+                </button>
+                <button type="button" class="flex-1 bg-[#FEE500] hover:bg-[#FDD100] text-[#191919] text-[14px] font-bold py-3 rounded-full active:scale-95 transition-all flex items-center justify-center gap-1.5" onclick="alert('카카오톡 예약 전송이 가상으로 성공하였습니다!'); closeReceiptModal()">
+                    <span class="material-symbols-outlined text-base">chat_bubble</span> 카카오톡 공유
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // App Data Models (Synchronous Reactive Data Storage)
+    const cakesData = {
+        strawberry: {
+            name: "딸기 생크림 케이크",
+            price: 34000,
+            image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCRov6viQRj1n9TptavZfRBABfkCaT1ge-zfsmn_X23MFLfBLOiFDZYP6aKiSbQhMSCP2ON8VBBP_ikPgeQ7KCyjeRNVf9O-Aexu8alslCG4AJMW9zbzuuHI9lFOIYkZFVGTizo-FaHgSztDwWsuXdLO5sJcpICI4fWhJB3ZZn8s8o8gadaEwSsAWh-TlvYCpA-Be3uQ--4n3gJKsZiRauSWZrn7dHnt2ZmFFfzvrwwuGm-L_AlVmlMTiVki0deEAoY_R9BV3hWFA"
+        },
+        chocolate: {
+            name: "초콜릿 가나슈 케이크",
+            price: 36000,
+            image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCvtQN2W50t9-vMqYty7Rmsr17UYFz6DZuzCYLIZFedYNE7kv6FbS6LfICxt4_hmMl8QsGx332gF3jH4vs3NYwbawT9JVD-X7bvxgep8riaO39enbeP4pIC54cjdcY7GGXJ8dVu_-LX3m7fqNZk5BU6RV8ErXsjG-YMVNnG2BsOVWklKqDyJoZfPq7bvzLumsN3R5g4N2_hbUScaYTRxzZ37OF3qAFHktRIpKT8qWeAfULTB8q4QO51YUz3S-hMGmG6xmHg4IqPnQ"
+        },
+        earlgrey: {
+            name: "얼그레이 자몽 케이크",
+            price: 35000,
+            image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&q=80&w=300"
+        }
+    };
+
+    // Global Active Session State Object (Fully Synchronized Reactive Store)
+    const state = {
+        cakeId: "strawberry",
+        date: "",
+        time: "오전 11:00",
+        sizeIndex: 0,
+        sizeName: "1호 (15cm)",
+        sizeAddPrice: 0,
+        flavor: "생크림",
+        optionCandle: true,
+        optionCard: true,
+        message: "",
+        packagingId: "free",
+        packagingPrice: 0
+    };
+
+    // Automatically assign today's date context (formatted nicely for Korea 2026-06-08)
+    const baseDate = new Date("2026-06-08");
+    function getFormattedDate(offsetDays) {
+        const target = new Date(baseDate);
+        target.setDate(baseDate.getDate() + offsetDays);
+        const mm = target.getMonth() + 1;
+        const dd = target.getDate();
+        const days = ["일", "월", "화", "수", "목", "금", "토"];
+        const dayName = days[target.getDay()];
+        return {
+            fullStr: `${mm}.${dd}`,
+            label: `${mm}월 ${dd}일 (${dayName})`,
+            dayName: dayName,
+            iso: target.toISOString().split('T')[0]
+        };
+    }
+
+    const dateOptions = {
+        day0: getFormattedDate(0), // Today
+        day1: getFormattedDate(1), // Tomorrow
+        day2: getFormattedDate(2)  // Day after
+    };
+
+    // Set dynamic texts on dates on load
+    document.getElementById('dateText1').innerText = dateOptions.day0.fullStr;
+    document.getElementById('dateText2').innerText = dateOptions.day1.fullStr;
+    document.getElementById('dateText3').innerText = dateOptions.day2.fullStr;
+
+    // Set initial date selection to Day0
+    state.date = dateOptions.day0.label;
+
+    // Dynamic Price Matrix & Summary Calculator
+    function calculateTotalPrice() {
+        const selectedCake = cakesData[state.cakeId];
+        let total = selectedCake.price;
+        
+        // Add Size
+        total += state.sizeAddPrice;
+        
+        // Add options
+        if (state.optionCandle) total += 1000;
+        if (state.optionCard) total += 1000;
+        
+        // Add Packaging
+        total += state.packagingPrice;
+        
+        return total;
+    }
+
+    function syncStateUI() {
+        const selectedCake = cakesData[state.cakeId];
+        const totalPrice = calculateTotalPrice();
+        
+        // Update Hero image dynamically when different cake selected
+        document.getElementById('heroImage').src = selectedCake.image;
+        
+        // Formatter function
+        const priceStr = totalPrice.toLocaleString('ko-KR') + "원";
+        
+        // Update Sticky Footer values
+        document.getElementById('footerSummaryLabel').innerText = `${state.date} ${state.time} 픽업 예정`;
+        document.getElementById('footerPriceLabel').innerText = `${selectedCake.name} 예약 ${priceStr}`;
+    }
+
+    // 1. Interactive Cake Selection Card Action
+    document.querySelectorAll('.cake-card').forEach(card => {
+        card.addEventListener('click', () => {
+            // Remove previous selections
+            document.querySelectorAll('.cake-card').forEach(c => {
+                c.classList.remove('selected-ring', 'border-primary');
+                c.classList.add('border-transparent');
+            });
+            
+            // Add state
+            state.cakeId = card.getAttribute('data-cake-id');
+            card.classList.add('selected-ring', 'border-primary');
+            card.classList.remove('border-transparent');
+            
+            syncStateUI();
+        });
+    });
+
+    // 2. Interactive Date Picker & Custom Logic
+    document.querySelectorAll('.date-option-btn').forEach((btn, index) => {
+        btn.addEventListener('click', () => {
+            // Remove active classes
+            document.querySelectorAll('.date-option-btn').forEach(b => {
+                b.className = "date-option-btn py-3 bg-surface hover:bg-surface-container-lowest text-brand-brown border border-outline-variant rounded-[16px] flex flex-col items-center justify-center transition-all transform active:scale-95";
+            });
+            document.getElementById('customDateBtn').className = "py-3 bg-surface hover:bg-surface-container-lowest text-brand-brown border border-outline-variant rounded-[16px] flex flex-col items-center justify-center transition-all transform active:scale-95";
+            document.getElementById('customDateLabel').innerText = "다른 날짜";
+            
+            // Activate selected
+            btn.className = "date-option-btn py-3 bg-primary-container text-on-primary rounded-[16px] flex flex-col items-center justify-center shadow-md border-2 border-transparent transition-all transform active:scale-95";
+            
+            const dayKey = 'day' + index;
+            state.date = dateOptions[dayKey].label;
+            
+            syncStateUI();
+        });
+    });
+
+    // Custom calendar picker support
+    const customDateBtn = document.getElementById('customDateBtn');
+    const hiddenDatePicker = document.getElementById('hiddenDatePicker');
+    
+    customDateBtn.addEventListener('click', () => {
+        hiddenDatePicker.showPicker(); // Natively trigger HTML5 datepicker element
+    });
+
+    hiddenDatePicker.addEventListener('change', (e) => {
+        const val = e.target.value;
+        if (val) {
+            const parsed = new Date(val);
+            const mm = parsed.getMonth() + 1;
+            const dd = parsed.getDate();
+            const days = ["일", "월", "화", "수", "목", "금", "토"];
+            const dayName = days[parsed.getDay()];
+            
+            // Reset regular active states
+            document.querySelectorAll('.date-option-btn').forEach(b => {
+                b.className = "date-option-btn py-3 bg-surface hover:bg-surface-container-lowest text-brand-brown border border-outline-variant rounded-[16px] flex flex-col items-center justify-center transition-all transform active:scale-95";
+            });
+            
+            // Highlight custom button
+            customDateBtn.className = "py-3 bg-primary-container text-on-primary rounded-[16px] flex flex-col items-center justify-center shadow-md border-2 border-transparent transition-all transform active:scale-95";
+            
+            state.date = `${mm}월 ${dd}일 (${dayName})`;
+            document.getElementById('customDateLabel').innerText = `${mm}.${dd} 선택`;
+            
+            syncStateUI();
+        }
+    });
+
+    // 3. Time Picker Event handlers
+    document.querySelectorAll('.time-option-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.time-option-btn').forEach(b => {
+                b.className = "time-option-btn px-4 py-2.5 bg-surface hover:bg-surface-container-lowest text-brand-brown border border-outline-variant rounded-full text-xs font-semibold transition-all";
+            });
+            btn.className = "time-option-btn px-4 py-2.5 bg-primary-container text-on-primary rounded-full text-xs font-semibold shadow-sm border border-transparent transition-all";
+            
+            state.time = btn.getAttribute('data-time');
+            syncStateUI();
+        });
+    });
+
+    // 4. Sizes Selection
+    document.querySelectorAll('.size-option-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.size-option-btn').forEach(b => {
+                b.className = "size-option-btn py-2.5 bg-surface hover:bg-surface-container-lowest text-brand-brown border border-outline-variant rounded-[16px] text-sm font-bold flex flex-col items-center justify-center transition-all";
+            });
+            btn.className = "size-option-btn py-2.5 bg-surface-container-low text-primary border-2 border-primary-container rounded-[16px] text-sm font-bold flex flex-col items-center justify-center shadow-sm transition-all";
+            
+            state.sizeIndex = parseInt(btn.getAttribute('data-size-index'));
+            state.sizeName = btn.getAttribute('data-size-name');
+            state.sizeAddPrice = parseInt(btn.getAttribute('data-size-add'));
+            
+            syncStateUI();
+        });
+    });
+
+    // 5. Flavor Selection
+    document.querySelectorAll('.flavor-option-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.flavor-option-btn').forEach(b => {
+                b.className = "flavor-option-btn py-2.5 bg-surface hover:bg-surface-container-lowest text-brand-brown border border-outline-variant rounded-[16px] text-sm font-bold transition-all";
+            });
+            btn.className = "flavor-option-btn py-2.5 bg-surface-container-low text-primary border-2 border-primary-container rounded-[16px] text-sm font-bold transition-all";
+            
+            state.flavor = btn.getAttribute('data-flavor');
+            syncStateUI();
+        });
+    });
+
+    // 6. Checkbox changes for additional items
+    const chkOptionCandle = document.getElementById('chkOptionCandle');
+    const chkOptionCard = document.getElementById('chkOptionCard');
+
+    chkOptionCandle.addEventListener('change', (e) => {
+        state.optionCandle = e.target.checked;
+        syncStateUI();
+    });
+    chkOptionCard.addEventListener('change', (e) => {
+        state.optionCard = e.target.checked;
+        syncStateUI();
+    });
+
+    // 7. Message input string bounds checker
+    const messageInput = document.getElementById('messageInput');
+    const charCountLabel = document.getElementById('charCountLabel');
+    
+    messageInput.addEventListener('input', (e) => {
+        const val = e.target.value;
+        const currentLength = val.length;
+        charCountLabel.innerText = `${currentLength} / 30자`;
+        state.message = val;
+    });
+
+    // 8. Packaging Option buttons
+    document.querySelectorAll('.pkg-option-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Restore styling
+            document.querySelectorAll('.pkg-option-btn').forEach(b => {
+                b.className = "pkg-option-btn flex flex-col items-center justify-center p-3.5 border border-outline-variant bg-surface rounded-[16px] text-center transition-all transform active:scale-95 text-on-surface-variant/80";
+                const icon = b.querySelector('.material-symbols-outlined');
+                if (icon) icon.style.fontVariationSettings = "'FILL' 0";
+            });
+            
+            // Mark selected
+            btn.className = "pkg-option-btn flex flex-col items-center justify-center p-3.5 border-2 border-primary-container bg-surface-container-low rounded-[16px] text-center shadow-sm transition-all transform active:scale-95";
+            const iconSec = btn.querySelector('.material-symbols-outlined');
+            if (iconSec) iconSec.style.fontVariationSettings = "'FILL' 1";
+            
+            state.packagingId = btn.getAttribute('data-pkg-id');
+            state.packagingPrice = parseInt(btn.getAttribute('data-pkg-add'));
+            
+            syncStateUI();
+        });
+    });
+
+    // 9. Wishlist Heart Switcher
+    function toggleWishlist(buttonEl) {
+        const starIcon = buttonEl.querySelector('.material-symbols-outlined');
+        if (starIcon.innerText === 'favorite_border') {
+            starIcon.innerText = 'favorite';
+            starIcon.style.fontVariationSettings = "'FILL' 1";
+            buttonEl.classList.remove('text-outline-variant');
+            buttonEl.classList.add('text-primary');
+        } else {
+            starIcon.innerText = 'favorite_border';
+            starIcon.style.fontVariationSettings = "'FILL' 0";
+            buttonEl.classList.add('text-outline-variant');
+            buttonEl.classList.remove('text-primary');
+        }
+    }
+
+    // Bottom left heart toggle also fully synced
+    const footerHeartBtn = document.getElementById('footerHeartBtn');
+    footerHeartBtn.addEventListener('click', () => {
+        const heartIcon = footerHeartBtn.querySelector('.material-symbols-outlined');
+        if (heartIcon.innerText === 'favorite_border') {
+            heartIcon.innerText = 'favorite';
+            heartIcon.style.fontVariationSettings = "'FILL' 1";
+            footerHeartBtn.classList.remove('text-secondary', 'border-outline-variant');
+            footerHeartBtn.classList.add('text-primary', 'border-primary', 'bg-[#fecddd]/10');
+        } else {
+            heartIcon.innerText = 'favorite_border';
+            heartIcon.style.fontVariationSettings = "'FILL' 0";
+            footerHeartBtn.classList.add('text-secondary', 'border-outline-variant');
+            footerHeartBtn.classList.remove('text-primary', 'border-primary', 'bg-[#fecddd]/10');
+        }
+    });
+
+    // 10. Show / Close Receipt Modal
+    const receiptModal = document.getElementById('receiptModal');
+    const reserveBtn = document.getElementById('reserveBtn');
+
+    reserveBtn.addEventListener('click', () => {
+        const selectedCake = cakesData[state.cakeId];
+        const totalPrice = calculateTotalPrice();
+        
+        // Fill receipt modal details dynamically
+        document.getElementById('rsvDate').innerText = `${state.date} ${state.time}`;
+        document.getElementById('rsvCakeName').innerText = selectedCake.name;
+        document.getElementById('rsvSizeAndFlavor').innerText = `사이즈: ${state.sizeName} / 맛: ${state.flavor}`;
+        document.getElementById('rsvCakePrice').innerText = selectedCake.price.toLocaleString('ko-KR') + "원";
+        
+        // Dynamic construction of Options list in modal
+        const optionsBox = document.getElementById('rsvOptionsBox');
+        optionsBox.innerHTML = '';
+        
+        let hasOptions = false;
+        if (state.sizeAddPrice > 0) {
+            hasOptions = true;
+            optionsBox.innerHTML += `
+                <div class="flex justify-between">
+                    <span>사이즈 업그레이드 (${state.sizeName})</span>
+                    <span class="text-brand-brown font-bold">+${state.sizeAddPrice.toLocaleString('ko-KR')}원</span>
+                </div>
+            `;
+        }
+        if (state.optionCandle) {
+            hasOptions = true;
+            optionsBox.innerHTML += `
+                <div class="flex justify-between">
+                    <span>예쁜 분위기용 축하 초</span>
+                    <span class="text-brand-brown font-bold">+1,000원</span>
+                </div>
+            `;
+        }
+        if (state.optionCard) {
+            hasOptions = true;
+            optionsBox.innerHTML += `
+                <div class="flex justify-between">
+                    <span>감동 손글씨 디자인 카드</span>
+                    <span class="text-brand-brown font-bold">+1,000원</span>
+                </div>
+            `;
+        }
+        
+        if (!hasOptions) {
+            optionsBox.innerHTML = `
+                <div class="text-center text-on-surface-variant/60 py-1">선택된 추가 옵션이 없습니다</div>
+            `;
+        }
+        
+        // Packaging Price
+        document.getElementById('rsvPackagingPrice').innerText = `+${state.packagingPrice.toLocaleString('ko-KR')}원`;
+        
+        // Message Row
+        const msgRow = document.getElementById('rsvMessageRow');
+        if (state.message.trim()) {
+            msgRow.classList.remove('hidden');
+            document.getElementById('rsvMessageContent').innerText = `"${state.message}"`;
+        } else {
+            msgRow.classList.add('hidden');
+        }
+        
+        // Total amount
+        document.getElementById('rsvTotalAmount').innerText = totalPrice.toLocaleString('ko-KR') + "원";
+        
+        // Triggers the modal visibility animation smoothly
+        receiptModal.classList.remove('hidden');
+    });
+
+    function closeReceiptModal() {
+        receiptModal.classList.add('hidden');
+    }
+
+    // Header buttons action alerts to make the static app super real-life ready!
+    document.getElementById('giftBtn').addEventListener('click', () => {
+        alert('온라인 선물하기 연동 링크가 활성화되었습니다. 모바일 카카오 선물하기 기프티콘과 연동됩니다.');
+    });
+    document.getElementById('backBtn').addEventListener('click', () => {
+        alert('이전 목록으로 돌아가는 버튼입니다. (예시 정적 사이트로 메인에 머무릅니다)');
+    });
+
+    // Run primary update on boot
+    syncStateUI();
+
+</script>
+</body>
+</html>

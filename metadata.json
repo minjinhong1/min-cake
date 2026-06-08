@@ -1,0 +1,6 @@
+{
+  "name": "케이크 예약하기",
+  "description": "기념일을 더욱 특별하게 만드는 모던한 100% 정적 케이크 예약 서비스",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
